@@ -31,23 +31,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#define htoll(x) (x)
-#define ltohl(x) (x)
-
-#define MKID(a,b,c,d) ((a) | ((b) << 8) | ((c) << 16) | ((d) << 24))
-
-#define ID_STAT MKID('S','T','A','T')
-#define ID_LIST MKID('L','I','S','T')
-#define ID_ULNK MKID('U','L','N','K')
-#define ID_SEND MKID('S','E','N','D')
-#define ID_RECV MKID('R','E','C','V')
-#define ID_DENT MKID('D','E','N','T')
-#define ID_DONE MKID('D','O','N','E')
-#define ID_DATA MKID('D','A','T','A')
-#define ID_OKAY MKID('O','K','A','Y')
-#define ID_FAIL MKID('F','A','I','L')
-#define ID_QUIT MKID('Q','U','I','T')
-
 #define min(a,b) ((a) < (b) ? (a):(b))
 
 #define SYNC_TEMP_BUFF_SIZE CONFIG_PATH_MAX
@@ -55,35 +38,6 @@
 /****************************************************************************
  * Private types
  ****************************************************************************/
-
-union syncmsg {
-    unsigned id;
-    struct {
-        unsigned id;
-        unsigned namelen;
-    } req;
-    struct {
-        unsigned id;
-        unsigned mode;
-        unsigned size;
-        unsigned time;
-    } stat;
-    struct {
-        unsigned id;
-        unsigned mode;
-        unsigned size;
-        unsigned time;
-        unsigned namelen;
-    } dent;
-    struct {
-        unsigned id;
-        unsigned size;
-    } data;
-    struct {
-        unsigned id;
-        unsigned msglen;
-    } status;
-};
 
 enum {
     AFS_STATE_WAIT_CMD,
@@ -180,7 +134,7 @@ static void state_reset(afs_service_t *svc);
 
 static int file_sync_on_ack(adb_service_t *service, apacket *p);
 static int file_sync_on_write(adb_service_t *service, apacket *p);
-static void file_sync_on_close(struct adb_service_s *service);
+static void file_sync_close(struct adb_service_s *service);
 
 /****************************************************************************
  * Private Functions
@@ -832,7 +786,7 @@ static int file_sync_on_ack(adb_service_t *service, apacket *p) {
     return ret;
 }
 
-static void file_sync_on_close(struct adb_service_s *service) {
+static void file_sync_close(struct adb_service_s *service) {
     afs_service_t *svc = container_of(service, afs_service_t, service);
     state_reset(svc);
     free(svc);
@@ -842,7 +796,7 @@ static const adb_service_ops_t file_sync_ops = {
     .on_write_frame = file_sync_on_write,
     .on_ack_frame   = file_sync_on_ack,
     .on_kick        = NULL,
-    .on_close       = file_sync_on_close
+    .close          = file_sync_close
 };
 
 /****************************************************************************
