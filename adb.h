@@ -45,6 +45,10 @@
 #define fatal(...) assert(0)
 #endif
 
+/* Only one abstraction layer implementation for now */
+
+#include "hal/hal_uv.h"
+
 /* Logging methods */
 
 void adb_log_impl(const char *func, int line, const char *fmt, ...);
@@ -113,7 +117,7 @@ typedef struct adb_service_ops_s {
     int (*on_write_frame)(struct adb_service_s *service, apacket *p);
     int (*on_ack_frame)(struct adb_service_s *service, apacket *p);
     void (*on_kick)(struct adb_service_s *service);
-    void (*on_close)(struct adb_service_s *service);
+    void (*close)(struct adb_service_s *service);
 } adb_service_ops_t;
 
 typedef struct adb_reverse_service_ops_s {
@@ -145,6 +149,7 @@ typedef struct adb_client_s {
     int next_service_id;
     adb_service_t *services;
     adb_service_t *r_services;
+    // adb_tcp_socket_t *sockets;
     uint8_t is_connected;
 #ifdef CONFIG_ADBD_AUTHENTICATION
     uint8_t token[CONFIG_ADBD_TOKEN_SIZE];
@@ -171,6 +176,7 @@ int adb_hal_random(void *buf, size_t len);
 /* Client */
 
 adb_client_t* adb_create_client(size_t size);
+void adb_init_client(adb_client_t *client);
 void adb_register_client(adb_client_t *client, adb_context_t *context);
 void adb_destroy_client(adb_client_t *client);
 void adb_client_kick_services(adb_client_t *client);
@@ -196,6 +202,8 @@ void adb_hal_apacket_release(adb_client_t *client, apacket *p);
 /* Services */
 
 void adb_register_service(adb_service_t *svc, adb_client_t *client);
+void adb_service_on_async_process_complete(adb_client_t *client,
+    adb_service_t *service, apacket *p);
 void adb_service_close(adb_client_t *client, adb_service_t *svc, apacket *p);
 
 #ifdef CONFIG_ADBD_AUTHENTICATION
