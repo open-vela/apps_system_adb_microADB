@@ -22,7 +22,8 @@
  * Public Functions
  ****************************************************************************/
 
-void adb_log_impl(const char *func, int line, const char *fmt, ...) {
+void adb_log_impl(int priority, const char *func, int line,
+                  const char *fmt, ...) {
   va_list ap;
   printf("%s (%d): ", func, line);
 
