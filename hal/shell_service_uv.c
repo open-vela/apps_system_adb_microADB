@@ -314,7 +314,7 @@ adb_service_t *shell_service(adb_client_t *client, const char *params) {
      * Create interactive session based on pty */
 
 #ifdef O_CLOEXEC
-    fds[0] = posix_openpt(O_RDWR | O_NOCTTY);
+    fds[0] = posix_openpt(O_RDWR | O_NOCTTY | O_CLOEXEC);
 #else
     fds[0] = posix_openpt(O_RDWR | O_NOCTTY);
 #endif
@@ -333,7 +333,7 @@ adb_service_t *shell_service(adb_client_t *client, const char *params) {
     slavedevice = ptsname(fds[0]);
 
 #ifdef O_CLOEXEC
-    fds[1] = open(slavedevice, O_RDWR | O_NOCTTY);
+    fds[1] = open(slavedevice, O_RDWR | O_NOCTTY | O_CLOEXEC);
 #else
     fds[1] = open(slavedevice, O_RDWR | O_NOCTTY);
 #endif
