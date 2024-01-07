@@ -130,9 +130,6 @@ static void tcp_on_connection(uv_stream_t* server, int status) {
     /* TODO check return code */
     assert(ret == 0);
 
-    client->socket.data = server;
-
-
     ret = uv_accept(server, (uv_stream_t*)&client->socket);
     /* TODO check return code */
     assert(ret == 0);
