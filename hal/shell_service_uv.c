@@ -222,8 +222,6 @@ static void shell_close(adb_service_t *service) {
 
   /* Terminate child process in case it is still running */
 
-  uv_process_kill(&svc->process, SIGKILL);
-
   uv_close((uv_handle_t *)&svc->shell_pipe, shell_close_pipe_callback);
 }
 
