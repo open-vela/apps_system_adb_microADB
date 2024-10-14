@@ -202,6 +202,11 @@ static int usb_uv_write(adb_client_t *c, apacket *p) {
     adb_client_usb_t *client = container_of(c, adb_client_usb_t, uc.client);
     uv_stream_t *pipe = (uv_stream_t *)&client->write_pipe;
 
+    if (uv_is_closing((uv_handle_t*)&client->write_pipe)) {
+        adb_err("uv_write is closing\n");
+        return 0;
+    }
+
     buf[0].base = (char*)&p->msg;
     buf[0].len  = sizeof(p->msg);
 
@@ -216,7 +221,6 @@ static int usb_uv_write(adb_client_t *c, apacket *p) {
 
     /* Packet is now tracked by libuv */
     up->wr.data = &client->uc;
-
 
     ret =uv_write(&up->wr, pipe, buf, buf_cnt,
         adb_uv_after_write);
