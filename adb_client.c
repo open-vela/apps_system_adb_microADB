@@ -464,7 +464,7 @@ adb_client_t *adb_create_client(size_t size) {
     return client;
 }
 
-void adb_destroy_client(adb_client_t *client) {
+void adb_close_all_service(adb_client_t *client) {
     adb_service_t *service = client->services;
     adb_service_t *next;
     while (service != NULL) {
@@ -474,6 +474,10 @@ void adb_destroy_client(adb_client_t *client) {
         adb_service_close(client, service, NULL);
         service = next;
     }
+}
+
+void adb_destroy_client(adb_client_t *client) {
+    adb_close_all_service(client);
     adb_hal_destroy_client(client);
 }
 
