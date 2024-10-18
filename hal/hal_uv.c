@@ -117,3 +117,14 @@ void adb_uv_close_client(adb_client_uv_t *client) {
 
     adb_destroy_client(&client->client);
 }
+
+void adb_uv_close_service(adb_client_uv_t *client) {
+
+    if (client->cur_packet) {
+        adb_hal_apacket_release(&client->client, &client->cur_packet->p);
+        client->cur_packet = NULL;
+    }
+
+    adb_close_all_service(&client->client);
+}
+
