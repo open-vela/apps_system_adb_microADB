@@ -201,6 +201,7 @@ void adb_hal_apacket_release(adb_client_t *client, apacket *p);
 
 void adb_register_service(adb_service_t *svc, adb_client_t *client);
 void adb_service_close(adb_client_t *client, adb_service_t *svc, apacket *p);
+void adb_close_all_service(adb_client_t *client);
 
 #ifdef CONFIG_ADBD_AUTHENTICATION
 extern const unsigned char *g_adb_public_keys[];

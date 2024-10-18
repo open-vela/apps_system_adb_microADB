@@ -103,5 +103,6 @@ void adb_uv_on_data_available(adb_client_uv_t *client, uv_stream_t *stream,
 
 adb_client_uv_t* adb_uv_create_client(size_t size);
 void adb_uv_close_client(adb_client_uv_t *client);
+void adb_uv_close_service(adb_client_uv_t *client);
 
 #endif /* __ADB_HAL_UV_PRIV_H__ */

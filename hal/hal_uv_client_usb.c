@@ -258,6 +258,9 @@ static void usb_uv_on_close(uv_handle_t* handle) {
     if (usb_hotplug_check(client) != 0) {
         adb_uv_close_client(&client->uc);
     }
+    else {
+        adb_uv_close_service(&client->uc);
+    }
 }
 
 static void usb_uv_close(adb_client_t *c) {
