@@ -186,7 +186,11 @@ void adb_uv_on_data_available(adb_client_uv_t *client, uv_stream_t *stream,
             (!client->client.is_connected && adb_check_auth_frame_header(&up->p)) ||
             (client->client.is_connected && adb_check_frame_header(&up->p)))) {
             adb_err("bad header: terminated (data)\n");
-            client->client.ops->close(&client->client);
+
+            /* Removes the first received frame header */
+
+            memcpy(&up->p.msg, &((char*)&up->p.msg)[client->cur_len], nread);
+            client->cur_len = nread;
             return;
         }
     }
