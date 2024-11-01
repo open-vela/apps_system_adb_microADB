@@ -266,6 +266,11 @@ static void usb_uv_on_close(uv_handle_t* handle) {
 static void usb_uv_close(adb_client_t *c) {
     adb_client_usb_t *client = (adb_client_usb_t*)c;
 
+    if (uv_is_closing((uv_handle_t*)&client->read_pipe) ||
+        uv_is_closing((uv_handle_t*)&client->write_pipe)) {
+        return;
+    }
+
     /* Close pipe and cancel all pending write requests if any */
     uv_close((uv_handle_t*)&client->read_pipe, usb_uv_on_close);
     uv_close((uv_handle_t*)&client->write_pipe, NULL);
