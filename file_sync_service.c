@@ -354,8 +354,12 @@ static int state_init_list(afs_service_t *svc, apacket *p)
     }
 
     memcpy(svc->list.path, svc->buff, len);
-    svc->list.path[len] = '/';
-    svc->list.file_ptr = svc->list.path+len +1;
+    if (svc->list.path[len - 1] != '/') {
+        svc->list.path[len] = '/';
+        len++;
+    }
+
+    svc->list.file_ptr = svc->list.path + len;
 
     svc->list.d = opendir(svc->buff);
     if(svc->list.d == NULL) {
