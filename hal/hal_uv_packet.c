@@ -124,7 +124,8 @@ void adb_uv_allocate_frame(adb_client_uv_t *client, uv_buf_t* buf) {
             buf->len = sizeof(ap->p.msg)-client->cur_len;
         }
         else {
-            buf->len = sizeof(ap->p.msg)+ap->p.msg.data_length-client->cur_len;
+            size_t len = MIN(ap->p.msg.data_length, CONFIG_ADBD_PAYLOAD_SIZE);
+            buf->len = sizeof(ap->p.msg) + len - client->cur_len;
         }
     }
     else {
