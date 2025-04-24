@@ -232,6 +232,7 @@ static void shell_kick(adb_service_t *service) {
                 alloc_buffer, pipe_on_data_available);
             /* TODO handle return code */
             assert(ret == 0);
+            UNUSED(ret);
         }
     }
 }
