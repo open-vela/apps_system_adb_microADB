@@ -246,6 +246,7 @@ static void usb_uv_kick(adb_client_t *c) {
             usb_uv_allocate_frame,
             usb_uv_on_data_available);
         /* TODO check return code */
+        UNUSED(ret);
         assert(ret == 0);
     }
 
