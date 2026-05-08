@@ -474,6 +474,7 @@ void adb_close_all_service(adb_client_t *client) {
         adb_service_close(client, service, NULL);
         service = next;
     }
+    client->is_connected = 0;
 }
 
 void adb_destroy_client(adb_client_t *client) {
