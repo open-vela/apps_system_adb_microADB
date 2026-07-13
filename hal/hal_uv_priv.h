@@ -85,6 +85,10 @@ int adb_uv_usb_setup(adb_context_uv_t *adbd, const char *path);
 int adb_uv_qemu_setup(adb_context_uv_t *adbd);
 #endif
 
+#ifdef CONFIG_ADBD_SERIAL_SERVER
+int adb_uv_serial_setup(adb_context_uv_t *adbd, const char *path, unsigned int baudrate);
+#endif
+
 /* hal packet management */
 
 apacket_uv_t* adb_uv_packet_allocate(adb_client_uv_t *client,

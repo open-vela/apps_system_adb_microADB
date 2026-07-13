@@ -12,7 +12,7 @@ https://developer.android.com/studio/command-line/adb?authuser=1
 
  * Event driven and asynchronous i/o
 
- * Both USB and TCP transports supported
+ * USB, TCP and Serial transports supported
 
 ## Licensing
 

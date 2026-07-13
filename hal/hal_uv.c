@@ -56,6 +56,14 @@ adb_context_t* adb_hal_create_context(void) {
     }
 #endif
 
+#ifdef CONFIG_ADBD_SERIAL_SERVER
+    if (adb_uv_serial_setup(adbd, CONFIG_ADBD_SERIAL_PORT,
+                            CONFIG_ADBD_SERIAL_BAUDRATE)) {
+        adb_hal_destroy_context(&adbd->context);
+        return NULL;
+    }
+#endif
+
     return &adbd->context;
 }
 
