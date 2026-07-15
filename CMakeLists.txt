@@ -33,6 +33,10 @@ set(ADBD_FEATURES       "\"cmd\""          CACHE STRING "")
 
 set(ADBD_TCP_SERVER_PORT "5555" CACHE STRING "")
 
+option(ADBD_SERIAL_SERVER "adb serial transport" OFF)
+set(ADBD_SERIAL_PORT "/dev/ttyS1" CACHE STRING "Serial device path")
+set(ADBD_SERIAL_BAUDRATE "921600" CACHE STRING "Serial baud rate")
+
 set (ADB_SRCS
   adb_main.c
   adb_banner.c
@@ -41,6 +45,10 @@ set (ADB_SRCS
   hal/hal_uv.c
   hal/hal_uv_packet.c
   hal/hal_uv_client_tcp.c)
+
+if(ADBD_SERIAL_SERVER)
+  set(ADB_SRCS ${ADB_SRCS} hal/hal_uv_client_serial.c)
+endif()
 
 if(ADBD_AUTHENTICATION)
   set(ADB_SRCS ${ADB_SRCS} adb_auth_key.c)
@@ -72,6 +80,12 @@ target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_PRODUCT_DEVICE=${ADBD_PRODU
 target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_FEATURES=${ADBD_FEATURES})
 target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_TCP_SERVER="y")
 target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_TCP_SERVER_PORT=${ADBD_TCP_SERVER_PORT})
+
+if(ADBD_SERIAL_SERVER)
+  target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_SERIAL_SERVER="y")
+  target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_SERIAL_PORT="${ADBD_SERIAL_PORT}")
+  target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_SERIAL_BAUDRATE=${ADBD_SERIAL_BAUDRATE})
+endif()
 
 if(ADBD_AUTHENTICATION)
   target_compile_definitions(adbd PUBLIC -DCONFIG_ADBD_AUTHENTICATION=1)
